@@ -35,7 +35,7 @@ namespace Recognize_VehicleLicensePlate
 
         public static async Task<string> ProcessImage(string image_path)
         {
-            string SECRET_KEY = "키설정을 해주세요.";
+            string SECRET_KEY = "키를 바꾸어주세요.";
 
             Byte[] bytes = File.ReadAllBytes(image_path);
             string imagebase64 = Convert.ToBase64String(bytes);
@@ -56,23 +56,47 @@ namespace Recognize_VehicleLicensePlate
             Task<string> recognizeTask = Task.Run(() => ProcessImage(@"C:\qqq.jpg"));
             recognizeTask.Wait();
             string task_result = recognizeTask.Result;
-
-            string result = task_result.Split(':')[11].Split(',')[0];
+            textBox1.Text = task_result;
+            /*string result = task_result.Split(':')[11].Split(',')[0];
 
             result = result.Replace("\"", "");
 
             result = result.Trim();  // 결과 값을 적절히 파싱
 
-            textBox1.AppendText(result);
+            textBox1.AppendText(result);*/
 
-           /* System.Console.WriteLine(task_result);
-            textBox1.Text = task_result;
-           */
+            /* System.Console.WriteLine(task_result);
+             textBox1.Text = task_result;
+            */
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pictureBox3.Image = resizeImage(pictureBox1.Image);
+        }
+
+        // 11-30, 이미지의 원하는 부분 추출
+        private static Image resizeImage(Image image)
+        {
+            using (var croppedbitmap = new Bitmap(image))
+            {
+                if(image != null)
+                {
+                    Bitmap bitmap = croppedbitmap.Clone(
+                        new Rectangle(0, 100, image.Width, image.Height - 200),
+                        System.Drawing.Imaging.PixelFormat.DontCare);
+                    return bitmap;
+                }
+                else
+                {
+                    return image;
+                }
+            }
         }
     }
 }
